@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Effects of Social Media on Mental Well-Being</title>
   <!-- Meta Tags -->
+
 <meta name="author" content="Christine">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
@@ -18,9 +19,12 @@
 <meta name="twitter:description" content="Explore the impact of social media on mental health and practical strategies for maintaining a healthy balance.">
 <meta name="twitter:image" content="https://mindfulbychristine.netlify.app/path-to-image.jpg">
 <!-- Favicon -->
-<link rel="icon" href="https://mindfulbychristine.netlify.app/favicon.ico" type="image/x-icon">
+<link rel="icon" href="https://mindfulbychristine.netlify.app/favicon.png" type="image/x-icon">
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  
   <style>
     /* Base Styles */
     body {
@@ -220,7 +224,7 @@
     <h1>The Effects of Social Media on Mental Well-Being: Exploring Anxiety and Depression Among Young Adults</h1>
     <div class="author-info">
       <span class="author-name">By Christine Lyomu</span>
-      <span class="author-role">Student and blogger</span>
+      <span class="author-role">Journalist,student and blogger</span>
     </div>
     <nav>
       <ul>
@@ -292,9 +296,139 @@
       <h2>Call to Action: Make Your Mental Wellness a Priority</h2>
       <p>While social media can be an effective resource, its influence on mental health should not be overlooked. By recognizing how it impacts our mental well-being and establishing healthy boundaries, we can engage with social media in a more thoughtful manner. If you find this message meaningful, consider sharing it with someone who might find it useful and follow us for additional insights on mental health. Keep in mind that support is accessible, and making your mental wellness a priority is crucial.</p>
     </section>
+    <section id="comments" class="comments-section" style="margin-bottom: 50px; padding: 25px; background-color: #f9f9f9; border-radius: 12px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 20px;">Comments</h2>
+      
+      <!-- Comment Form -->
+      <form id="commentForm" style="margin-bottom: 30px;">
+        <div style="margin-bottom: 15px;">
+          <input type="text" id="nameInput" placeholder="Your Name" required
+            style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: 'Montserrat', sans-serif;">
+          <textarea id="commentInput" placeholder="Your Comment" required
+            style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; min-height: 100px; font-family: 'Montserrat', sans-serif;"></textarea>
+        </div>
+        <button type="submit" 
+          style="background-color: #007acc; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 500;">
+          Post Comment
+        </button>
+      </form>
+    
+      <!-- Comments List -->
+      <div id="commentsList"></div>
+    </section>
   </main>
   <footer>
     <p>&copy; 2024 Mental Health Awareness. All rights reserved.</p>
   </footer>
+  <script>
+    // Initialize Firebase (replace with your Firebase config)
+    const firebaseConfig = {
+
+apiKey: "AIzaSyAvHI_QNma01_lVxwg-lWB8Hglx6roKkVg",
+
+authDomain: "country-4e0da.firebaseapp.com",
+
+projectId: "country-4e0da",
+
+storageBucket: "country-4e0da.appspot.com",
+
+messagingSenderId: "349521336272",
+
+appId: "1:349521336272:web:7254e5904d22a25e3d4bd5",
+
+measurementId: "G-RLGVSE3NSM"
+
+};
+
+
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Get Firestore instance
+    const db = firebase.firestore();
+    
+    // Function to format date
+    function formatDate(timestamp) {
+      const date = timestamp.toDate();
+      const options = { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      };
+      return date.toLocaleDateString('en-US', options);
+    }
+    
+    // Function to load comments
+    function loadComments() {
+      const commentsList = document.getElementById('commentsList');
+      
+      // Real-time listener for comments
+      db.collection('comments')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot((snapshot) => {
+          commentsList.innerHTML = ''; // Clear existing comments
+          
+          snapshot.forEach((doc) => {
+            const comment = doc.data();
+            const commentElement = document.createElement('div');
+            commentElement.style.padding = '15px';
+            commentElement.style.marginBottom = '15px';
+            commentElement.style.backgroundColor = 'white';
+            commentElement.style.borderRadius = '8px';
+            commentElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+    
+            commentElement.innerHTML = `
+              <div style="margin-bottom: 5px;">
+                <strong style="color: #1a1a1a; font-family: 'Montserrat', sans-serif;">
+                  ${comment.name}
+                </strong>
+                <span style="color: #666; font-size: 0.9rem; margin-left: 10px;">
+                  ${formatDate(comment.timestamp)}
+                </span>
+              </div>
+              <div style="color: #333; font-family: 'Montserrat', sans-serif;">
+                ${comment.content}
+              </div>
+            `;
+    
+            commentsList.appendChild(commentElement);
+          });
+        }, (error) => {
+          console.error("Error loading comments: ", error);
+        });
+    }
+    
+    // Handle form submission
+    document.getElementById('commentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const nameInput = document.getElementById('nameInput');
+      const commentInput = document.getElementById('commentInput');
+      
+      if (nameInput.value.trim() && commentInput.value.trim()) {
+        try {
+          // Add comment to Firestore
+          await db.collection('comments').add({
+            name: nameInput.value.trim(),
+            content: commentInput.value.trim(),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          
+          // Clear form
+          nameInput.value = '';
+          commentInput.value = '';
+        } catch (error) {
+          console.error("Error adding comment: ", error);
+          alert('Error posting comment. Please try again.');
+        }
+      }
+    });
+    
+    // Load comments when page loads
+    document.addEventListener('DOMContentLoaded', loadComments);
+    </script>
 </body>
 </html>
