@@ -169,7 +169,31 @@
       margin-top: 50px;
       border-top: 1px solid #ddd;
     }
-
+    .like-button {
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 8px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .like-button:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .like-button.liked {
+      background-color: #007acc;
+      color: white;
+    }
+    
+    .like-count {
+      font-weight: bold;
+      margin-left: 5px;
+    }
     /* Responsive Styling */
     @media (max-width: 768px) {
       body {
@@ -296,6 +320,12 @@
       <h2>Call to Action: Make Your Mental Wellness a Priority</h2>
       <p>While social media can be an effective resource, its influence on mental health should not be overlooked. By recognizing how it impacts our mental well-being and establishing healthy boundaries, we can engage with social media in a more thoughtful manner. If you find this message meaningful, consider sharing it with someone who might find it useful and follow us for additional insights on mental health. Keep in mind that support is accessible, and making your mental wellness a priority is crucial.</p>
     </section>
+    <section id="like-section" style="text-align: center; margin: 30px 0;">
+      <button id="likeButton" class="like-button">
+        <span>❤️</span>
+        <span id="likeCount">0</span> Likes
+      </button>
+    </section>
     <section id="comments" class="comments-section" style="margin-bottom: 50px; padding: 25px; background-color: #f9f9f9; border-radius: 12px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
       <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 20px;">Comments</h2>
       
@@ -322,114 +352,226 @@
   </footer>
   <script>
     // Initialize Firebase (replace with your Firebase config)
-    const firebaseConfig = {
+   // Firebase configuration remains the same
+   const firebaseConfig = {
 
-apiKey: "AIzaSyCAoWu53cTAafDdSSmTJdZC_0nf0SHt49w",
+apiKey: "AIzaSyB4HARD1loGCCXusjfpXiu3WdwD9we5k2Q",
 
-authDomain: "tiny-c56a4.firebaseapp.com",
+authDomain: "nuriaa-657e3.firebaseapp.com",
 
-projectId: "tiny-c56a4",
+projectId: "nuriaa-657e3",
 
-storageBucket: "tiny-c56a4.firebasestorage.app",
+storageBucket: "nuriaa-657e3.appspot.com",
 
-messagingSenderId: "468282642308",
+messagingSenderId: "567633922043",
 
-appId: "1:468282642308:web:2a1fdeb01d4f8794da17d1",
+appId: "1:567633922043:web:2e2221cb28eabbf2fdad5e",
 
-measurementId: "G-JJ4YEZNE5D"
+measurementId: "G-JTS6MP0XC3"
 
 };
 
 
-
-    
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    
-    // Get Firestore instance
-    const db = firebase.firestore();
-    
-    // Function to format date
-    function formatDate(timestamp) {
-      const date = timestamp.toDate();
-      const options = { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      };
-      return date.toLocaleDateString('en-US', options);
-    }
-    
-    // Function to load comments
-    function loadComments() {
-      const commentsList = document.getElementById('commentsList');
-      
-      // Real-time listener for comments
-      db.collection('comments')
-        .orderBy('timestamp', 'desc')
-        .onSnapshot((snapshot) => {
-          commentsList.innerHTML = ''; // Clear existing comments
-          
-          snapshot.forEach((doc) => {
-            const comment = doc.data();
-            const commentElement = document.createElement('div');
-            commentElement.style.padding = '15px';
-            commentElement.style.marginBottom = '15px';
-            commentElement.style.backgroundColor = 'white';
-            commentElement.style.borderRadius = '8px';
-            commentElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
-    
-            commentElement.innerHTML = `
-              <div style="margin-bottom: 5px;">
-                <strong style="color: #1a1a1a; font-family: 'Montserrat', sans-serif;">
-                  ${comment.name}
-                </strong>
-                <span style="color: #666; font-size: 0.9rem; margin-left: 10px;">
-                  ${formatDate(comment.timestamp)}
-                </span>
-              </div>
-              <div style="color: #333; font-family: 'Montserrat', sans-serif;">
-                ${comment.content}
-              </div>
-            `;
-    
-            commentsList.appendChild(commentElement);
-          });
-        }, (error) => {
-          console.error("Error loading comments: ", error);
-        });
-    }
-    
-    // Handle form submission
-    document.getElementById('commentForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const nameInput = document.getElementById('nameInput');
-      const commentInput = document.getElementById('commentInput');
-      
-      if (nameInput.value.trim() && commentInput.value.trim()) {
-        try {
-          // Add comment to Firestore
-          await db.collection('comments').add({
-            name: nameInput.value.trim(),
-            content: commentInput.value.trim(),
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          });
-          
-          // Clear form
-          nameInput.value = '';
-          commentInput.value = '';
-        } catch (error) {
-          console.error("Error adding comment: ", error);
-          alert('Error posting comment. Please try again.');
-        }
+  // Initialize Firebase with offline persistence
+  firebase.initializeApp(firebaseConfig);
+  
+  // Enable offline persistence
+  firebase.firestore().enablePersistence()
+    .catch((err) => {
+      if (err.code == 'failed-precondition') {
+        // Multiple tabs open, persistence can only be enabled in one tab at a a time.
+        console.warn("Firestore persistence failed: Multiple tabs open");
+      } else if (err.code == 'unimplemented') {
+        // The current browser does not support all of the features required to enable persistence
+        console.warn("Firestore persistence not supported in this browser");
       }
     });
-    
-    // Load comments when page loads
-    document.addEventListener('DOMContentLoaded', loadComments);
+
+  const db = firebase.firestore();
+    // Function to format date
+    function formatDate(timestamp) {
+  // Check if timestamp is null or undefined
+  if (!timestamp) {
+    return 'Just now';
+  }
+  
+  // If timestamp is a Firestore timestamp
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  
+  const options = { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit' 
+  };
+  return date.toLocaleDateString('en-US', options);
+}
+
+function loadComments() {
+  const commentsList = document.getElementById('commentsList');
+  
+  // Real-time listener for comments
+  db.collection('comments')
+    .orderBy('timestamp', 'desc')
+    .onSnapshot((snapshot) => {
+      commentsList.innerHTML = ''; // Clear existing comments
+      
+      snapshot.forEach((doc) => {
+        const comment = doc.data();
+        const commentElement = document.createElement('div');
+        commentElement.style.padding = '15px';
+        commentElement.style.marginBottom = '15px';
+        commentElement.style.backgroundColor = 'white';
+        commentElement.style.borderRadius = '8px';
+        commentElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+
+        commentElement.innerHTML = `
+          <div style="margin-bottom: 5px;">
+            <strong style="color: #1a1a1a; font-family: 'Montserrat', sans-serif;">
+              ${comment.name}
+            </strong>
+            <span style="color: #666; font-size: 0.9rem; margin-left: 10px;">
+              ${formatDate(comment.timestamp)}
+            </span>
+          </div>
+          <div style="color: #333; font-family: 'Montserrat', sans-serif;">
+            ${comment.content}
+          </div>
+        `;
+
+        commentsList.appendChild(commentElement);
+      });
+    }, (error) => {
+      console.error("Error loading comments: ", error);
+    });
+}
+
+document.getElementById('commentForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const nameInput = document.getElementById('nameInput');
+  const commentInput = document.getElementById('commentInput');
+  
+  if (nameInput.value.trim() && commentInput.value.trim()) {
+    try {
+      // Add comment to Firestore
+      await db.collection('comments').add({
+        name: nameInput.value.trim(),
+        content: commentInput.value.trim(),
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      
+      // Clear form
+      nameInput.value = '';
+      commentInput.value = '';
+    } catch (error) {
+      console.error("Error adding comment: ", error);
+      alert('Error posting comment. Please try again.');
+    }
+  }
+});
+
+// Load comments when page loads
+document.addEventListener('DOMContentLoaded', loadComments);
     </script>
+
+<script>
+  // Existing Firebase initialization remains the same
+
+ // Function to get or create a unique visitor ID
+ function getVisitorId() {
+    let visitorId = localStorage.getItem('visitorId');
+    if (!visitorId) {
+      visitorId = Date.now().toString() + Math.random().toString(36).substring(2);
+      localStorage.setItem('visitorId', visitorId);
+    }
+    return visitorId;
+  }
+
+  // Load likes with improved error handling and offline support
+  function loadLikes() {
+    const likeCount = document.getElementById('likeCount');
+    
+    // Use local storage as a fallback
+    const cachedLikes = localStorage.getItem('blogLikeCount');
+    if (cachedLikes) {
+      likeCount.textContent = cachedLikes;
+    }
+
+    // Attempt to fetch from Firestore
+    db.collection('blogLikes').doc('mentalHealthBlog')
+      .get({ source: 'default' })  // Try server first, but allow cache
+      .then((doc) => {
+        if (doc.exists) {
+          const currentLikes = doc.data().likeCount || 0;
+          likeCount.textContent = currentLikes;
+          localStorage.setItem('blogLikeCount', currentLikes.toString());
+        }
+      })
+      .catch((error) => {
+        console.warn("Error loading likes:", error);
+      });
+  }
+
+  // Handle like button click with improved transaction handling
+  function handleLike() {
+    const likeButton = document.getElementById('likeButton');
+    const likeCount = document.getElementById('likeCount');
+    const visitorId = getVisitorId();
+    const likeRef = db.collection('blogLikes').doc('mentalHealthBlog');
+    const userLikeRef = db.collection('blogLikeUsers').doc(visitorId);
+
+    // Check local storage to prevent multiple likes
+    if (localStorage.getItem(`liked_mentalHealthBlog_${visitorId}`)) {
+      alert('You have already liked this post!');
+      return;
+    }
+
+    // Optimistic UI update
+    const currentLikes = parseInt(likeCount.textContent) || 0;
+    likeCount.textContent = currentLikes + 1;
+    likeButton.classList.add('liked');
+
+    // Attempt to increment likes
+    db.runTransaction(async (transaction) => {
+      const likeDoc = await transaction.get(likeRef);
+      const currentServerLikes = likeDoc.exists ? likeDoc.data().likeCount || 0 : 0;
+      
+      transaction.set(likeRef, { likeCount: currentServerLikes + 1 });
+      transaction.set(userLikeRef, { 
+        blogId: 'mentalHealthBlog', 
+        likedAt: firebase.firestore.FieldValue.serverTimestamp() 
+      });
+
+      // Mark as liked in local storage
+      localStorage.setItem(`liked_mentalHealthBlog_${visitorId}`, 'true');
+      localStorage.setItem('blogLikeCount', (currentServerLikes + 1).toString());
+    })
+    .catch((error) => {
+      console.warn("Like transaction failed:", error);
+      
+      // Revert UI if transaction fails
+      likeCount.textContent = currentLikes;
+      likeButton.classList.remove('liked');
+      
+      // Provide user feedback
+      alert('Unable to process like at the moment. Please check your internet connection.');
+    });
+  }
+
+  // Event listeners with fallback
+  document.addEventListener('DOMContentLoaded', () => {
+    const likeButton = document.getElementById('likeButton');
+    
+    // Load initial likes
+    loadLikes();
+
+    // Add click event with fallback
+    if (likeButton) {
+      likeButton.addEventListener('click', handleLike);
+    }
+  });
+</script>
 </body>
 </html>
