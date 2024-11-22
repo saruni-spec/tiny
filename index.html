@@ -194,6 +194,63 @@
       font-weight: bold;
       margin-left: 5px;
     }
+        /* Social Media Section Styles */
+    .social-media-section {
+      margin: 40px 0;
+      padding: 25px;
+      background-color: #f9f9f9;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .social-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .social-platform {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .social-platform h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #1a1a1a;
+      margin-bottom: 15px;
+    }
+
+    .social-platform ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .social-platform li {
+      margin-bottom: 10px;
+    }
+
+    .social-platform a {
+      color: #007acc;
+      text-decoration: none;
+      display: inline-block;
+      padding: 5px 0;
+      transition: color 0.3s ease;
+    }
+
+    .social-platform a:hover {
+      color: #005a9e;
+    }
+
+    .fa-twitter { color: #1DA1F2; }
+    .fa-instagram { color: #E4405F; }
+    .fa-spotify { color: #1DB954; }
+    .fa-tiktok { color: #000000; }
     /* Responsive Styling */
     @media (max-width: 768px) {
       body {
@@ -239,6 +296,9 @@
 
       blockquote, .tip {
         padding: 15px;
+      }
+      .social-links {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -346,6 +406,47 @@
       <!-- Comments List -->
       <div id="commentsList"></div>
     </section>
+    <section class="social-media-section">
+    <h2>Follow Our Journey on Social Media</h2>
+    <p>Join our community across various platforms to stay updated with the latest content and discussions about mental health awareness.</p>
+    
+    <div class="social-links">
+      <div class="social-platform">
+        <h3><i class="fab fa-twitter"></i> Twitter Posts</h3>
+        <ul>
+          <li><a href="https://x.com/lyomu690/status/1858146863016206514" target="_blank">Mental Health Awareness Post #1</a></li>
+          <li><a href="https://x.com/lyomu690/status/1858750219111764438" target="_blank">Mental Health Awareness Post #2</a></li>
+          <li><a href="https://x.com/lyomu690/status/1858750231862522127" target="_blank">Mental Health Awareness Post #3</a></li>
+          <li><a href="https://x.com/lyomu690/status/1858750264297107818" target="_blank">Mental Health Awareness Post #4</a></li>
+        </ul>
+      </div>
+
+      <div class="social-platform">
+        <h3><i class="fab fa-instagram"></i> Instagram Content</h3>
+        <ul>
+          <li><a href="https://www.instagram.com/reel/DCpdJj-sTCK/" target="_blank">Stress and Anxiety Management Tips</a></li>
+          <li><a href="https://www.instagram.com/p/DCov3FyMmmk/" target="_blank">Exam Stress Management Guide</a></li>
+          <li><a href="https://www.instagram.com/reel/DCm3m3eM5Dz/" target="_blank">The Power of Sharing Your Story</a></li>
+          <li><a href="https://www.instagram.com/p/DCkK-7Xta1x/" target="_blank">Overcoming Life's Challenges</a></li>
+        </ul>
+      </div>
+
+      <div class="social-platform">
+        <h3><i class="fab fa-spotify"></i> Spotify Podcast</h3>
+        <ul>
+          <li><a href="https://open.spotify.com/show/7bircJ2bIZhIZAX7FZJ7U9" target="_blank">Mental Health Awareness Podcast</a></li>
+        </ul>
+      </div>
+
+      <div class="social-platform">
+        <h3><i class="fab fa-tiktok"></i> TikTok Content</h3>
+        <ul>
+          <li><a href="https://vm.tiktok.com/ZMh7sjPeY/" target="_blank">Mental Health TikTok #1</a></li>
+          <li><a href="https://vm.tiktok.com/ZMh7sPeBj/" target="_blank">Mental Health TikTok #2</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
   </main>
   <footer>
     <p>&copy; 2024 Mental Health Awareness. All rights reserved.</p>
